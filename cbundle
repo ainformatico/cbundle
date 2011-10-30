@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+###
+#   cbundle 1.0 is a simple tool to generate Mercurial bundles easily.
+#
+#   @author: El Chacal Del Utero
+#
+#   @version: 1.0
+#
+#   @created: 20100303
+#
+##
+
+
+#cbundle is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#cbundle is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with cbundle. If not, see <http://www.gnu.org/licenses/>.
+#
+
+bundle="";
+i=1
+rev=0
+
+if [ $# -gt 3 ]
+then
+  while [ $# -gt 0 ]; do
+    if [[ $1 =~ [a-zA-Z] ]]
+    then
+      if [[ $1 =~ 'null' ]]
+      then
+        rev=null
+      else
+        if [ $# -eq 1 ]
+        then
+          bundle+="$1"
+        else
+          bundle+="$1."
+        fi
+      fi
+    else
+      rev=$1
+      if ! r=`hg log -r $1 | grep -Eo ":([a-z0-9]{12})" | grep -oE "\w.+"`
+      then
+        exit;
+      fi
+      bundle+="$1.$r."
+    fi
+    i=$(($i+1))
+    shift
+  done
+  hg bundle --base $rev $bundle
+else
+  echo -e "\nInvalid number of parameters.\nUse:\ncbundle [project] [branch] [revision] [comment]"
+fi
