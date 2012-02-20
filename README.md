@@ -18,7 +18,7 @@ cbundle is a simple tool to generate Mercurial bundles easily.
 
 Author
 ----------------------------
-El Chacal Del Útero
+Alejandro El Informático
 
 Requirements
 ----------------------------
